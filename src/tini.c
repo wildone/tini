@@ -122,9 +122,9 @@ Zombie processes will not be re-parented to Tini, so zombie reaping won't work.\
 To fix the problem, "
 #if HAS_SUBREAPER
 #ifndef TINI_MINIMAL
-"use the -s option "
+"use the -s option or "
 #endif
-"or set the environment variable " SUBREAPER_ENV_VAR " to register Tini as a child subreaper, or "
+"set the environment variable " SUBREAPER_ENV_VAR " to register Tini as a child subreaper, or "
 #endif
 "run Tini as PID 1.";
 
@@ -247,7 +247,7 @@ void print_usage(char* const name, FILE* const file) {
 	fprintf(file, "  -v: Generate more verbose output. Repeat up to 3 times.\n");
 	fprintf(file, "  -w: Print a warning when processes are getting reaped.\n");
 	fprintf(file, "  -g: Send signals to the child's process group.\n");
-	fprintf(file, "  -e EXIT_CODE: Remap EXIT_CODE (from 0 to 255) to 0.\n");
+	fprintf(file, "  -e EXIT_CODE: Remap EXIT_CODE (from 0 to 255) to 0 (can be repeated).\n");
 	fprintf(file, "  -l: Show license and exit.\n");
 #endif
 

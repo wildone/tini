@@ -88,8 +88,22 @@ your package manager):
     ENV TINI_VERSION v@tini_VERSION_MAJOR@.@tini_VERSION_MINOR@.@tini_VERSION_PATCH@
     ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
     ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini.asc /tini.asc
-    RUN gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 \
-     && gpg --verify /tini.asc
+    RUN gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 \
+     && gpg --batch --verify /tini.asc /tini
+    RUN chmod +x /tini
+
+
+### Verifying binaries via checksum ###
+
+The `tini` and `tini-static` binaries have generated checksums (`SHA1` and `SHA256`).
+
+You can verify their checksums using `sha1sum` and `sha256sum` (which you may install using
+your package manager):
+
+    ENV TINI_VERSION v@tini_VERSION_MAJOR@.@tini_VERSION_MINOR@.@tini_VERSION_PATCH@
+    RUN wget --no-check-certificate --no-cookies --quiet https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-amd64 \
+        && wget --no-check-certificate --no-cookies --quiet https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-amd64.sha256sum \
+        && echo "$(cat tini-amd64.sha256sum)" | sha256sum -c
 
 
 ### Alpine Linux Package ###
@@ -106,6 +120,25 @@ On Alpine Linux, you can use the following command to install Tini:
 Using Nix, you can use the following command to install Tini:
 
     nix-env --install tini
+
+
+### Debian ###
+
+On Debian (Buster or newer), you can use the following command to install Tini:
+
+    apt-get install tini
+
+Note that this installs `/usr/bin/tini` (and `/usr/bin/tini-static`), not `/tini`.
+
+
+### Arch Linux ###
+
+On Arch Linux, there is a package available on the [AUR](https://wiki.archlinux.org/index.php/Arch_User_Repository).
+Install using the [official instructions](https://wiki.archlinux.org/index.php/Arch_User_Repository#Installing_packages)
+or use an [AUR helper](https://wiki.archlinux.org/index.php/AUR_helpers):
+
+    pacaur -S tini
+
 
 ### Other Platforms ###
 
@@ -277,6 +310,7 @@ Special thanks to:
 
   + [Danilo Bürger][40] for packaging Tini for Alpine
   + [Asko Soukka][41] for packaging Tini for Nix
+  + [nfnty][42] for packaging Tini for Arch Linux
 
 
   [0]: https://github.com/krallin/tini/issues/8
@@ -292,3 +326,4 @@ Special thanks to:
   [34]: https://github.com/pks-t
   [40]: https://github.com/danilobuerger
   [41]: https://github.com/datakurre
+  [42]: https://github.com/nfnty/pkgbuilds/tree/master/tini/tini
